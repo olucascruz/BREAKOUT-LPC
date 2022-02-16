@@ -10,16 +10,9 @@ PADDLE_HEIGHT = 15
 pygame.init()
 game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
-paddle_color = (255,0,0) #Red
+x = SCREEN_WIDTH / 2
+y = 550
 
-paddle = pygame.draw.rect(game_screen,
-                            paddle_color, 
-                            pygame.Rect(
-                            (SCREEN_WIDTH/2)-PADDLE_WIDTH/2, #Position X
-                            SCREEN_HEIGHT-50, #Position Y
-                            PADDLE_WIDTH,
-                            PADDLE_HEIGHT)
-                        )
 def blocks():
     width = 26
     height = 10
@@ -78,7 +71,14 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                x = x - 20
+            if event.key == pygame.K_RIGHT:
+                x = x + 20
 
-
+    pygame.draw.rect(game_screen, (0, 0, 100), (x, y, 100, 20))
+        
 
     pygame.display.update()        
