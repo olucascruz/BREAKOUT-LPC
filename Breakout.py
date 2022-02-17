@@ -55,13 +55,39 @@ def screen_limit():
                             LIMIT_HEIGHT,
                             SCREEN_HEIGHT)
                         )
+        limit_top = pygame.draw.rect(game_screen,
+                            LIMIT_COLOR, 
+                            pygame.Rect(
+                            0, #Position X
+                            40, #Position Y
+                            SCREEN_WIDTH,
+                            LIMIT_HEIGHT*3)
+                        )
 
-score_font = pygame.font.Font('assets/PressStart2P-Regular.ttf', 44)
-score_text = score_font.render('00 x 00', True, 'white', 'black')
-score_text_rect = score_text.get_rect()
+font = pygame.font.Font('freesansbold.ttf', 24)
+life_1 = '1'
+score_1 = '000'
+life_2 = '1'
+score_2 = '000' 
 
-screen_limit()
-blocks()
+color_text = 'white'
+
+text_life_1 = font.render(life_1, True, color_text)
+pos_text_life_1 = text_life_1.get_rect()
+pos_text_life_1.center = (SCREEN_WIDTH*0.1, 70)
+
+text_life_2 = font.render(life_2, True, color_text)
+pos_text_life_2 = text_life_2.get_rect()
+pos_text_life_2.center = (SCREEN_WIDTH*0.55, 70)
+
+text_score_1 = font.render(score_1, True, color_text)
+pos_text_score_1 = text_score_1.get_rect()
+pos_text_score_1.center = (SCREEN_WIDTH*0.2, 100)
+
+text_score_2 = font.render(score_2, True, color_text)
+pos_text_score_2 = text_score_2.get_rect()
+pos_text_score_2.center = (SCREEN_WIDTH*0.65, 100)
+
 
 
 #Game_loop 
@@ -78,6 +104,12 @@ while True:
 
     game_screen.fill((0, 0, 0))
     pygame.draw.rect(game_screen, (0, 0, 100), (x, y, 100, 20))
-        
 
+    game_screen.blit(text_life_1, pos_text_life_1)
+    game_screen.blit(text_life_2, pos_text_life_2)
+    game_screen.blit(text_score_1, pos_text_score_1)
+    game_screen.blit(text_score_2, pos_text_score_2)        
+
+    screen_limit()
+    blocks()
     pygame.display.update()        
