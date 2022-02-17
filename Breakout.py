@@ -5,8 +5,6 @@ SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
-PADDLE_WIDTH = 80
-PADDLE_HEIGHT = 15
 pygame.init()
 game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
@@ -78,6 +76,7 @@ while True:
             if event.key == pygame.K_RIGHT:
                 x = x + 20
 
+    game_screen.fill((0, 0, 0))
     pygame.draw.rect(game_screen, (0, 0, 100), (x, y, 100, 20))
         
 
