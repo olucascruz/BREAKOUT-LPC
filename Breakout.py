@@ -5,6 +5,12 @@ SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
+RED = '#A31E0A'
+ORANGE = '#C2850A'
+GREEN = '#0A8533'
+YELLOW = '#C2C229'
+WHITE = '#CCCCCC'
+BLUE = '#0A85C2'
 pygame.init()
 game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
@@ -20,76 +26,102 @@ def blocks():
     gap = 2.5
     margin_top = 120
     margin_left = 2
-    block_color = 'red'   
+    block_color = RED  
     for i in range(14):
         for j in range(8):
             if j == 0 or j == 1:
-                block_color = 'red'   
+                block_color = RED   
             if j == 2 or j == 3:
-                block_color = 'orange'
+                block_color = ORANGE
             if j == 4 or j == 5:
-                block_color = 'green'
+                block_color = GREEN
             if j > 5:
-                block_color = 'yellow'
+                block_color = YELLOW
 
 
                 
             x = margin_left+(width + gap) * i
             y = margin_top+(height + gap*2) * j
-            pygame.draw.rect(game_screen, block_color,
-            pygame.Rect(x,y,width,height))
-            
+            block = pygame.Surface((width,height))
+            pos_block = (x,y)
+            block.fill(block_color)
+            game_screen.blit(block, pos_block)  
+    
 def screen_limit():
-        LIMIT_HEIGHT = 5
-        LIMIT_COLOR = 'white'
-        limit_rigth = pygame.draw.rect(game_screen,
-                            LIMIT_COLOR, 
-                            pygame.Rect(
-                            SCREEN_WIDTH-LIMIT_HEIGHT, #Position X
-                            0, #Position Y
-                            LIMIT_HEIGHT,
-                            SCREEN_HEIGHT)
-                        )
-        limit_left = pygame.draw.rect(game_screen,
-                            LIMIT_COLOR, 
-                            pygame.Rect(
-                            0, #Position X
-                            0, #Position Y
-                            LIMIT_HEIGHT,
-                            SCREEN_HEIGHT)
-                        )
-        limit_top = pygame.draw.rect(game_screen,
-                            LIMIT_COLOR, 
-                            pygame.Rect(
-                            0, #Position X
-                            40, #Position Y
-                            SCREEN_WIDTH,
-                            LIMIT_HEIGHT*3)
-                        )
+    LIMIT_HEIGHT = 5
+    LIMIT_COLOR = WHITE
+    limit_rigth = pygame.draw.rect(game_screen,
+                        LIMIT_COLOR, 
+                        pygame.Rect(
+                        SCREEN_WIDTH-LIMIT_HEIGHT, #Position X
+                        0, #Position Y
+                        LIMIT_HEIGHT,
+                        SCREEN_HEIGHT)
+                    )
+    limit_left = pygame.draw.rect(game_screen,
+                        LIMIT_COLOR, 
+                        pygame.Rect(
+                        0, #Position X
+                        0, #Position Y
+                        LIMIT_HEIGHT,
+                        SCREEN_HEIGHT)
+                    )
+    limit_top = pygame.draw.rect(game_screen,
+                        LIMIT_COLOR, 
+                        pygame.Rect(
+                        0, #Position X
+                        40, #Position Y
+                        SCREEN_WIDTH,
+                        LIMIT_HEIGHT*3)
+                    )
+    
+    colors_details = (RED, ORANGE, GREEN, YELLOW, BLUE)
+    pos_details = (117, 147, 177, 207, 545)
 
-font = pygame.font.Font('freesansbold.ttf', 24)
+    for i in range(5):
+       left_details = pygame.draw.rect(game_screen,
+                        colors_details[i], 
+                        pygame.Rect(
+                        0, #Position X
+                        pos_details[i], #Position Y
+                        LIMIT_HEIGHT,
+                        30)
+                    )
+    for i in range(5):
+        right_details = pygame.draw.rect(game_screen,
+                        colors_details[i], 
+                        pygame.Rect(
+                        SCREEN_WIDTH-LIMIT_HEIGHT, #Position X
+                        pos_details[i], #Position Y
+                        LIMIT_HEIGHT,
+                        30)
+                    )
+    
+
+
+font = pygame.font.Font('assets/bauhaus-93.ttf', 42)
 life_1 = '1'
 score_1 = '000'
 life_2 = '1'
 score_2 = '000' 
 
-color_text = 'white'
+color_text = WHITE
 
 text_life_1 = font.render(life_1, True, color_text)
 pos_text_life_1 = text_life_1.get_rect()
-pos_text_life_1.center = (SCREEN_WIDTH*0.1, 70)
+pos_text_life_1.center = (20, 70)
 
 text_life_2 = font.render(life_2, True, color_text)
 pos_text_life_2 = text_life_2.get_rect()
-pos_text_life_2.center = (SCREEN_WIDTH*0.55, 70)
+pos_text_life_2.center = (220, 70)
 
 text_score_1 = font.render(score_1, True, color_text)
 pos_text_score_1 = text_score_1.get_rect()
-pos_text_score_1.center = (SCREEN_WIDTH*0.2, 100)
+pos_text_score_1.center = (65, 100)
 
 text_score_2 = font.render(score_2, True, color_text)
 pos_text_score_2 = text_score_2.get_rect()
-pos_text_score_2.center = (SCREEN_WIDTH*0.65, 100)
+pos_text_score_2.center = (265, 100)
 
 
 
@@ -111,8 +143,8 @@ while True:
         x = 340
 
     game_screen.fill((0, 0, 0))
-    pygame.draw.rect(game_screen, (30, 144, 255), (x, y, 60, 20))
-    pygame.draw.circle(game_screen, (255, 255, 255), (ball_x, ball_y), 5)
+    pygame.draw.rect(game_screen, BLUE, (x, y, 60, 20))
+    pygame.draw.circle(game_screen, WHITE, (ball_x, ball_y), 5)
     
 
     game_screen.blit(text_life_1, pos_text_life_1)
