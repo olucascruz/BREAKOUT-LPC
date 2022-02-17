@@ -8,7 +8,7 @@ SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 pygame.init()
 game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
-x = SCREEN_WIDTH / 2
+x = 150
 y = 550
 
 def blocks():
@@ -101,6 +101,11 @@ while True:
                 x = x - 20
             if event.key == pygame.K_RIGHT:
                 x = x + 20
+                
+    if x <= 0:
+        x = 0
+    if x >= 300:
+        x = 300
 
     game_screen.fill((0, 0, 0))
     pygame.draw.rect(game_screen, (0, 0, 100), (x, y, 100, 20))
