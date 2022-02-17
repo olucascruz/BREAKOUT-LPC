@@ -8,8 +8,11 @@ SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 pygame.init()
 game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
-x = 150
+x = 180
 y = 550
+
+ball_x = 200
+ball_y = 300
 
 def blocks():
     width = 26
@@ -104,11 +107,13 @@ while True:
                 
     if x <= 0:
         x = 0
-    if x >= 300:
-        x = 300
+    if x >= 340:
+        x = 340
 
     game_screen.fill((0, 0, 0))
-    pygame.draw.rect(game_screen, (0, 0, 100), (x, y, 100, 20))
+    pygame.draw.rect(game_screen, (30, 144, 255), (x, y, 60, 20))
+    pygame.draw.circle(game_screen, (255, 255, 255), (ball_x, ball_y), 5)
+    
 
     game_screen.blit(text_life_1, pos_text_life_1)
     game_screen.blit(text_life_2, pos_text_life_2)
