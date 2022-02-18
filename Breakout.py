@@ -123,10 +123,11 @@ text_score_2 = font.render(score_2, True, color_text)
 pos_text_score_2 = text_score_2.get_rect()
 pos_text_score_2.center = (265, 100)
 
-
+clock = pygame.time.Clock()
 
 #Game_loop 
 while True:
+    clock.tick(100)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -144,8 +145,10 @@ while True:
 
     game_screen.fill((0, 0, 0))
     pygame.draw.rect(game_screen, BLUE, (x, y, 60, 20))
-    pygame.draw.circle(game_screen, WHITE, (ball_x, ball_y), 5)
     
+    pygame.draw.circle(game_screen, WHITE, (ball_x, ball_y), 5)
+    ball_y = ball_y + 1
+    ball_x = ball_x + 1
 
     game_screen.blit(text_life_1, pos_text_life_1)
     game_screen.blit(text_life_2, pos_text_life_2)
