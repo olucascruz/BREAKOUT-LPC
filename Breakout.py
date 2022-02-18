@@ -20,12 +20,31 @@ y = 550
 ball_x = 200
 ball_y = 300
 
-def blocks():
-    width = 26
-    height = 10
+block_width = 26
+block_height = 10
+
+class block(pygame.sprite.Sprite):
+    def __init__(self, color, width, height, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((width,height))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.center = [pos_x, pos_y]
+
+    def break_block(self):
+        global velocity, block_height, block_width
+        if self.rect.center[1]+block_height >= ball_y and\
+                    (self.rect.center[0]<=ball_x and
+                    self.rect.center[0]+block_width>=ball_x):
+                        self.kill()
+
+blocks_group = pygame.sprite.Group()
+def create_blocks():
+    global blocos_grupo, block_height, block_width
+    
     gap = 2.5
-    margin_top = 120
-    margin_left = 2
+    margin_top = 125
+    margin_left = 15
     block_color = RED  
     for i in range(14):
         for j in range(8):
@@ -40,13 +59,14 @@ def blocks():
 
 
                 
-            x = margin_left+(width + gap) * i
-            y = margin_top+(height + gap*2) * j
-            block = pygame.Surface((width,height))
-            pos_block = (x,y)
-            block.fill(block_color)
-            game_screen.blit(block, pos_block)  
-    
+            position_x = margin_left+(block_width + gap) * i
+            position_y = margin_top+(block_height + gap*2) * j
+
+            a_block = block(block_color,block_width,block_height,position_x,position_y)  
+            blocks_group.add(a_block)
+    return blocks_group
+create_blocks()
+
 def screen_limit():
     LIMIT_HEIGHT = 5
     LIMIT_COLOR = WHITE
@@ -156,5 +176,6 @@ while True:
     game_screen.blit(text_score_2, pos_text_score_2)        
 
     screen_limit()
-    blocks()
+    blocks_group.draw(game_screen)
+    blocks_group.update()
     pygame.display.update()        
