@@ -169,6 +169,10 @@ while True:
     pygame.draw.circle(game_screen, WHITE, (ball_x, ball_y), 5)
     ball_y = ball_y + 1
     ball_x = ball_x + 1
+    
+    if ball_y >= 600:
+        ball_y = 300
+        ball_x = 200
 
     game_screen.blit(text_life_1, pos_text_life_1)
     game_screen.blit(text_life_2, pos_text_life_2)
