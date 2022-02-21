@@ -119,7 +119,7 @@ def screen_limit():
     
 
 
-font = pygame.font.Font('assets/bauhaus-93.ttf', 42)
+font = pygame.font.Font('font/forward-regular.ttf', 32)
 life_1 = '1'
 score_1 = '000'
 life_2 = '1'
