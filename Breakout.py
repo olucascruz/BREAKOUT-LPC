@@ -22,6 +22,8 @@ block_height = 10
 paddle_width = 40
 paddle_height = 20
 
+run = True
+
 pygame.init()
 pygame.mixer.init()
 
@@ -44,6 +46,7 @@ class Ball():
 
     def move(self):
         # movement ball
+        global life, text_life
         self.x = self.x + self.dx
         self.y = self.y + self.dy
 
@@ -69,6 +72,8 @@ class Ball():
             self.y = 600 - self.height / 2.0
             self.x = SCREEN_WIDTH/2.0
             self.y = 600/2.0
+            update_life()
+
 
     def render(self, color=WHITE):
         pygame.draw.rect(game_screen, color, (self.x, self.y, 12, 10))
@@ -78,6 +83,7 @@ class Ball():
         y_collision = (math.fabs(self.y - other.y) * 2) < (self.height + other.height)
         return (x_collision and y_collision)
 
+
 class block(pygame.sprite.Sprite):
     def __init__(self, color, width, height, pos_x, pos_y):
         pygame.sprite.Sprite.__init__(self)
@@ -85,9 +91,12 @@ class block(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
-
+        self.x = pos_x
+        self.y = pos_y
+        self.width = width
+        self.height = height
+        self.color = color
     
-
 
 blocks_group = pygame.sprite.Group()
 
@@ -176,29 +185,88 @@ def screen_limit():
                                          )
 
 
-font = pygame.font.Font('font/forward-regular.ttf', 32)
+font = pygame.font.Font('font/forward-regular.ttf', 24)
 life_1 = '1'
-score_1 = '000'
-life_2 = '1'
-score_2 = '000'
 
+score_1_hundreds = 0
+score_1_dozens = 0
+score_1_unit = 0
+
+life = 1
+score_2 = '000'
 color_text = WHITE
 
+def update_score(block_color):
+    global score_1_unit, score_1_dozens, score_1_hundreds
+    if block_color == YELLOW:
+        score_1_unit += 1
+    if block_color == GREEN:
+        score_1_unit += 3
+    if block_color == ORANGE:
+        score_1_unit += 5
+    if block_color == RED:
+        score_1_unit += 7
+        
+    if score_1_unit > 9:
+        score_1_unit = 0
+        score_1_dozens += 1
+
+    if score_1_dozens > 9:
+        score_1_dozens = 0
+        score_1_hundreds += 1
+
+# score and life 
 text_life_1 = font.render(life_1, True, color_text)
 pos_text_life_1 = text_life_1.get_rect()
 pos_text_life_1.center = (20, 70)
 
-text_life_2 = font.render(life_2, True, color_text)
-pos_text_life_2 = text_life_2.get_rect()
+text_life = font.render(str(life), True, color_text)
+pos_text_life_2 = text_life.get_rect()
 pos_text_life_2.center = (220, 70)
 
-text_score_1 = font.render(score_1, True, color_text)
+text_score_1 = font.render(str(score_1_hundreds)\
+                          +str(score_1_dozens)\
+                          +str(score_1_unit), True, color_text)
+
 pos_text_score_1 = text_score_1.get_rect()
 pos_text_score_1.center = (65, 100)
 
 text_score_2 = font.render(score_2, True, color_text)
 pos_text_score_2 = text_score_2.get_rect()
 pos_text_score_2.center = (265, 100)
+
+def update_life():
+    global life, text_life, run
+    if run:
+        life +=1
+    text_life = font.render(str(life), True, color_text)
+    if life == 4:
+    
+        life = 1
+        text_life = font.render(str(life), True, color_text)
+
+def break_block():
+    for a_block in blocks_group:
+        if ball.is_aabb_collision(a_block):
+            ball.render(a_block.color)
+            ball.dy *= -1
+            impact_with_block.play()
+           
+            # break block
+            a_block.kill()
+            
+            # update score
+            update_score(a_block.color)
+            if score_1_unit > 4 and ball.dy < 7:
+                ball.dy = ball.dy + 2
+            if a_block.color == GREEN and ball.dy < 10:
+                ball.dy = ball.dy + 3 
+            if a_block.color == ORANGE and ball.dy < 14:
+                ball.dy = ball.dy + 4
+            if a_block.color == RED and ball.dy < 18:
+                ball.dy = ball.dy + 4
+        if len(blocks_group) < 1:
+            create_blocks()
 
 clock = pygame.time.Clock()
 ball = Ball()
@@ -221,6 +289,7 @@ while True:
     
     if ball.is_aabb_collision(paddle):
         ball.dy *= -1
+        impact_with_paddle.play()
 
     if x <= 0:
         x = 0
@@ -230,11 +299,22 @@ while True:
     ball.render()
 
     game_screen.blit(text_life_1, pos_text_life_1)
-    game_screen.blit(text_life_2, pos_text_life_2)
+    game_screen.blit(text_life, pos_text_life_2)
     game_screen.blit(text_score_1, pos_text_score_1)
     game_screen.blit(text_score_2, pos_text_score_2)
+    text_score_1 = font.render(str(score_1_hundreds)\
+                                +str(score_1_dozens)\
+                                +str(score_1_unit), True, color_text)
+        
+    if run:    
+        break_block()
+    else:
+        if ball.y <= 230:
+            ball.dy *= -1
+            impact_with_block.play()
 
     screen_limit()
     blocks_group.draw(game_screen)
+    
     blocks_group.update()
     pygame.display.update()
