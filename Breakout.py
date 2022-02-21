@@ -126,7 +126,6 @@ def create_blocks():
             blocks_group.add(a_block)
     return blocks_group
 
-
 create_blocks()
 
 
@@ -215,6 +214,22 @@ def update_score(block_color):
         score_1_dozens = 0
         score_1_hundreds += 1
 
+def endgame():
+    global paddle_width, run, score_1_unit, score_1_dozens, score_1_hundreds
+    
+    score_1_hundreds = 0
+    score_1_dozens = 0
+    score_1_unit = 0
+
+    for a_block in blocks_group:
+        a_block.kill() 
+    
+    create_blocks()
+    run = False
+    if not run:
+        paddle_width = SCREEN_WIDTH
+        pygame.time.set_timer(pygame.USEREVENT+1, 5000)
+
 # score and life 
 text_life_1 = font.render(life_1, True, color_text)
 pos_text_life_1 = text_life_1.get_rect()
@@ -241,7 +256,7 @@ def update_life():
         life +=1
     text_life = font.render(str(life), True, color_text)
     if life == 4:
-    
+        endgame()
         life = 1
         text_life = font.render(str(life), True, color_text)
 
@@ -250,7 +265,7 @@ def break_block():
         if ball.is_aabb_collision(a_block):
             ball.render(a_block.color)
             ball.dy *= -1
-            impact_with_block.play()
+            impact_with_block.play()       
            
             # break block
             a_block.kill()
@@ -277,6 +292,14 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+
+    if event.type == pygame.USEREVENT+1: 
+            pygame.time.set_timer(pygame.USEREVENT+1, 0)
+            run = True
+            paddle_width = 40
+            ball.y = SCREEN_HEIGHT/2
+            ball.x = SCREEN_WIDTH/2
+            x = SCREEN_WIDTH/2
 
     if pygame.key.get_pressed()[pygame.K_LEFT]:
         x -= 10
