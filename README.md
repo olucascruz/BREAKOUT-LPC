@@ -2,7 +2,7 @@
 
 
 ## 🧐)What is the BREAKOUT-LPC's purpose?
-This project is being develop for Universidade do Estado do Amazonas's students [...]
+This project is being developed by Universidade do Estado do Amazonas's students for a disciplinary activity
 
 
 
@@ -22,11 +22,11 @@ $ git pull
 ```
 
 ## 🎮) Controls
-|To right| To right|
+|To left| To right|
 | :---: | :---: |
 |LEFT| RIGHT |
 
-## 📌) Authors
+## ✒️) Authors
 | [<img src="https://avatars.githubusercontent.com/u/69447962?v=4" width=115><br><sub>Lucas Cruz</sub>](https://github.com/olucascruz) |  [<img src="https://avatars.githubusercontent.com/u/93674466?v=4" width=115><br><sub>Manuela Bastos</sub>](https://github.com/manupbastos) | 
 | :---: | :---: |
 
