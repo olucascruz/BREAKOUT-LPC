@@ -12,8 +12,6 @@ GREEN = '#0A8533'
 YELLOW = '#C2C229'
 WHITE = '#CCCCCC'
 BLUE = '#0A85C2'
-pygame.init()
-game_screen = pygame.display.set_mode(SCREEN_SIZE)
 
 x = 180
 y = 550
@@ -21,38 +19,59 @@ y = 550
 block_width = 26
 block_height = 10
 
+paddle_width = 40
+paddle_height = 20
+
+pygame.init()
+pygame.mixer.init()
+
+impact_with_block = pygame.mixer.Sound('songs/impact_with_block.wav')
+impact_with_limit = pygame.mixer.Sound('songs/impact_with_limit.wav')
+impact_with_paddle = pygame.mixer.Sound('songs/impact_with_paddle.wav')
+
+game_screen = pygame.display.set_mode(SCREEN_SIZE)
+
+
+
 class Ball():
     def __init__(self):
         self.x = 200
         self.y = 300
         self.dx = 1
-        self.dy = -1
+        self.dy = -5
         self.width = 10
         self.height = 8
 
     def move(self):
+        # movement ball
         self.x = self.x + self.dx
         self.y = self.y + self.dy
 
+        # collision with left limit
         if self.x < 0 + self.width/2.0:
             self.x = 0 + self.width/2.0
             self.dx *= -1
-
+            impact_with_limit.play()
+        
+        # collision with rigth limit 
         elif self.x > 395 - self.width/2.0:
             self.x = 395 - self.width/2.0
             self.dx *= -1
+            impact_with_limit.play()
 
-        if self.y < 0 + self.height / 2.0:
-            self.y = 0 + self.height / 2.0
+        # collision with top limit
+        if self.y < 50 + self.height / 2.0:
+            self.y = 50 + self.height / 2.0
             self.dy *= -1
+            impact_with_limit.play()
 
         elif self.y > 600 - self.height / 2.0:
             self.y = 600 - self.height / 2.0
             self.x = SCREEN_WIDTH/2.0
             self.y = 600/2.0
 
-    def render(self):
-        pygame.draw.rect(game_screen, WHITE, (self.x, self.y, 12, 10))
+    def render(self, color=WHITE):
+        pygame.draw.rect(game_screen, color, (self.x, self.y, 12, 10))
         
     def is_aabb_collision(self, other):
         x_collision = (math.fabs(self.x - other.x) * 2) < (self.width + other.width)
@@ -67,12 +86,7 @@ class block(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
 
-    def break_block(self):
-        global velocity, block_height, block_width
-        if self.rect.center[1] + block_height >= self.y and \
-                (self.rect.center[0] <= self.x and
-                 self.rect.center[0] + block_width >= self.x):
-            self.kill()
+    
 
 
 blocks_group = pygame.sprite.Group()
@@ -138,6 +152,10 @@ def screen_limit():
     colors_details = (RED, ORANGE, GREEN, YELLOW, BLUE)
     pos_details = (117, 147, 177, 207, 545)
 
+    for i in range(len(pos_details)):
+        if ball.y > pos_details[i] and ball.y<pos_details[i] +30:
+            ball.render(colors_details[i])
+
     for i in range(5):
         left_details = pygame.draw.rect(game_screen,
                                         colors_details[i],
@@ -187,27 +205,27 @@ ball = Ball()
 
 # Game_loop
 while True:
-    clock.tick(100)
+    clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
 
     if pygame.key.get_pressed()[pygame.K_LEFT]:
-        x -= 5
+        x -= 10
     if pygame.key.get_pressed()[pygame.K_RIGHT]:
-        x += 5
+        x += 10
 
     ball.move()
     game_screen.fill((0, 0, 0))
-    paddle = pygame.draw.rect(game_screen, BLUE, (x, y, 60, 20))
+    paddle = pygame.draw.rect(game_screen, BLUE, (x, y, paddle_width, paddle_height))
     
     if ball.is_aabb_collision(paddle):
         ball.dy *= -1
 
     if x <= 0:
         x = 0
-    if x >= 340:
-        x = 340
+    if x >= SCREEN_WIDTH - paddle_width:
+        x = SCREEN_WIDTH - paddle_width
 
     ball.render()
 
@@ -220,5 +238,3 @@ while True:
     blocks_group.draw(game_screen)
     blocks_group.update()
     pygame.display.update()
-    
-    
