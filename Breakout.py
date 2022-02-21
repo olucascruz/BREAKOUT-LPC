@@ -1,5 +1,6 @@
 # Breakout game using pygame
 import pygame
+import math
 
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
@@ -52,6 +53,11 @@ class Ball():
 
     def render(self):
         pygame.draw.rect(game_screen, WHITE, (self.x, self.y, 12, 10))
+        
+    def is_aabb_collision(self, other):
+        x_collision = (math.fabs(self.x - other.x) * 2) < (self.width + other.width)
+        y_collision = (math.fabs(self.y - other.y) * 2) < (self.height + other.height)
+        return (x_collision and y_collision)
 
 class block(pygame.sprite.Sprite):
     def __init__(self, color, width, height, pos_x, pos_y):
@@ -194,6 +200,9 @@ while True:
     ball.move()
     game_screen.fill((0, 0, 0))
     paddle = pygame.draw.rect(game_screen, BLUE, (x, y, 60, 20))
+    
+    if ball.is_aabb_collision(paddle):
+        ball.dy *= -1
 
     if x <= 0:
         x = 0
