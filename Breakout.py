@@ -335,6 +335,9 @@ while True:
         if ball.y <= 230:
             ball.dy *= -1
             impact_with_block.play()
+        if ball.y >= y:
+            ball.dy *= -1
+            impact_with_paddle.play()
 
     screen_limit()
     blocks_group.draw(game_screen)
